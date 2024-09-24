@@ -1,7 +1,5 @@
 #Requires AutoHotkey v2.0
 
-global current_edit := 0
-
 global Part_Number := ""
 global Revision := ""
 global Lot_Number := ""
@@ -19,24 +17,18 @@ MyGui.Opt("+AlwaysOnTop -Caption +ToolWindow")
 MyGui.MarginX := 0
 MyGui.Marginy := 0
 
-global ddl := MyGui.AddDropDownList("vChoice", ["Part Number", "Revision", "Lot Number", "Description", "Quantity", "Supplier"])
-ddl.OnEvent("Change", SET_CURRENT, 1)
+global ddl := MyGui.AddDropDownList("vChoice",)
 
 global size := Format("x{1} y{2} w{3} h{4}", X, Y, W, H)
 MyGui.Show(size)
 
-
-SET_CURRENT(*) {
-    global current_edit
-    current_edit := ddl.Value
-}
-
-
+;Focus on gui ctrl + e
 ^e:: {
     WinWait "ahk_class AutoHotkeyGUI"
     WinActivate
 }
 
+;Hide gui and turn off edit keys ctrl + h
 ^h:: {
     MyGui.Hide()
 
@@ -51,8 +43,9 @@ SET_CURRENT(*) {
     Hotkey("^e", "off")
 }
 
+;Copy one item at a time, based off of selected item on drop down list alt + c
 !c:: {
-    Switch current_edit
+    Switch ddl.Value
     {
         Case 1:
             global Part_Number := get_Value()
@@ -69,8 +62,9 @@ SET_CURRENT(*) {
     }
 }
 
+;Paste one item at a time, based off of selected item on drop down list alt + v
 !v:: {
-    Switch current_edit
+    Switch ddl.Value
     {
         Case 1:
             global Part_Number
@@ -93,6 +87,7 @@ SET_CURRENT(*) {
     }
 }
 
+; Copy values directly alt + 1-6
 !1:: {
     global Part_Number := get_Value()
 }
@@ -112,6 +107,7 @@ SET_CURRENT(*) {
     global Supplier := get_Value()
 }
 
+; Paste values directly ctrl + numpad1-numpad6
 ^Numpad1:: {
     global Part_Number
     set_Value(Part_Number)
@@ -137,7 +133,7 @@ SET_CURRENT(*) {
     set_Value(Supplier)
 }
 
-
+;Function to reset clipboard, copy ctrl + c, then return clipboard contents
 get_Value() {
     A_Clipboard := ""  ; Start off empty to allow ClipWait to detect when the text has arrived.
     Send "^c"
@@ -145,18 +141,13 @@ get_Value() {
     return A_Clipboard
 }
 
+;Function to set clipboard then envoke paste ctrl + v
 set_Value(str) {
     A_Clipboard := str
     ClipWait
     Send "^v"
 }
 
-;todo: when focused on the drop down list, record focused item -- copy value into selected item
-;todo: hotkeys also work to copy directly without needing to edit the ddl
-;todo: outside of edit mode it's not possible to edit values, done to prevent accidental changes
-;todo: lock values once confident all the values have been found, focusing on ddl can be prevented
-;      and hotkeys to record to specific slots can be disabled
-;TODO: when Locked hide ddl
 ;TODO: Toggle showing values
 ;TODO: Data Dump in case I need to make an email
 
