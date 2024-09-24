@@ -17,7 +17,9 @@ MyGui.Opt("+AlwaysOnTop -Caption +ToolWindow")
 MyGui.MarginX := 0
 MyGui.Marginy := 0
 
-global ddl := MyGui.AddDropDownList("vChoice",)
+global labels := ["Part Number: ", "Revision: ", "Lot Number: ", "Description: ", "Quantity: ", "Supplier: "]
+
+global ddl := MyGui.AddDropDownList("vChoice", labels)
 
 global size := Format("x{1} y{2} w{3} h{4}", X, Y, W, H)
 MyGui.Show(size)
@@ -148,7 +150,18 @@ set_Value(str) {
     Send "^v"
 }
 
+;Make a concatenated string of all the values
+printData() {
+    data := labels[1] . Part_Number . "`n" . labels[2] . Revision . "`n" . labels[3] . Lot_Number . "`n" . labels[4] . Description . "`n" . labels[5] . Quantity . "`n" . labels[6] . Supplier . "`n"
+    Send data
+}
+
+;Print all the values when PrintScreen is pressed
+PrintScreen:: printData()
+
 ;TODO: Toggle showing values
 ;TODO: Data Dump in case I need to make an email
 
-esc:: ExitApp
+
+;Exit app by pressing ctrl + End
+^End:: ExitApp
