@@ -3,7 +3,7 @@
 global toggle_hide_debug := false
 
 global current_edit := 0
-global editable := true
+
 global Part_Number := ""
 global Revision := ""
 global Lot_Number := ""
@@ -23,8 +23,7 @@ MyGui.Marginy := 0
 
 global ddl := MyGui.AddDropDownList("vChoice", ["Part Number", "Revision", "Lot Number", "Description", "Quantity", "Supplier"])
 ddl.OnEvent("Change", SET_CURRENT, 1)
-ddl.OnEvent("Focus", SET_EDIT_ON, 1)
-; ddl.OnEvent("LoseFocus", SET_EDIT_OFF, 1)
+
 global size := Format("x{1} y{2} w{3} h{4}", X, Y, W, H)
 MyGui.Show(size)
 
@@ -34,14 +33,8 @@ SET_CURRENT(*) {
     current_edit := ddl.Value
 }
 
-SET_EDIT_ON(*) {
-    global editable
-    editable := true
-}
 
 ^e:: {
-
-    ;Set ComboBox as active - focused/editable
     WinWait "ahk_class AutoHotkeyGUI"
     WinActivate
 }
@@ -52,13 +45,18 @@ SET_EDIT_ON(*) {
 
     if toggle_hide_debug {
         MyGui.Hide()
-    } else {
-        MyGui.Show()
+
+        Hotkey("!c", "off")
+        Hotkey("!v", "off")
+        Hotkey("!1", "off")
+        Hotkey("!2", "off")
+        Hotkey("!3", "off")
+        Hotkey("!4", "off")
+        Hotkey("!5", "off")
+        Hotkey("!6", "off")
+        Hotkey("^e", "off")
     }
-
-
 }
-
 
 !c:: {
     Switch current_edit
@@ -120,7 +118,6 @@ SET_EDIT_ON(*) {
 !6:: {
     global Supplier := get_Value()
 }
-
 
 ^Numpad1:: {
     global Part_Number
