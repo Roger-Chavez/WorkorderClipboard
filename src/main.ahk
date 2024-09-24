@@ -1,7 +1,5 @@
 #Requires AutoHotkey v2.0
 
-global toggle_hide_debug := false
-
 global current_edit := 0
 
 global Part_Number := ""
@@ -40,22 +38,17 @@ SET_CURRENT(*) {
 }
 
 ^h:: {
-    global toggle_hide_debug
-    toggle_hide_debug := !toggle_hide_debug
+    MyGui.Hide()
 
-    if toggle_hide_debug {
-        MyGui.Hide()
-
-        Hotkey("!c", "off")
-        Hotkey("!v", "off")
-        Hotkey("!1", "off")
-        Hotkey("!2", "off")
-        Hotkey("!3", "off")
-        Hotkey("!4", "off")
-        Hotkey("!5", "off")
-        Hotkey("!6", "off")
-        Hotkey("^e", "off")
-    }
+    Hotkey("!c", "off")
+    Hotkey("!v", "off")
+    Hotkey("!1", "off")
+    Hotkey("!2", "off")
+    Hotkey("!3", "off")
+    Hotkey("!4", "off")
+    Hotkey("!5", "off")
+    Hotkey("!6", "off")
+    Hotkey("^e", "off")
 }
 
 !c:: {
