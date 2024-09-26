@@ -33,8 +33,17 @@ MyGui.Show(size)
 
 ;Hide gui and turn off edit keys ctrl + h
 ^h:: {
+    MyGui.Hide()
 
-
+    Hotkey("!c", "off")
+    Hotkey("!v", "off")
+    Hotkey("!1", "off")
+    Hotkey("!2", "off")
+    Hotkey("!3", "off")
+    Hotkey("!4", "off")
+    Hotkey("!5", "off")
+    Hotkey("!6", "off")
+    Hotkey("^e", "off")
 }
 
 ;Copy one item at a time, based off of selected item on drop down list alt + c
