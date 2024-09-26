@@ -1,8 +1,9 @@
 #Requires AutoHotkey v2.0
 
-global Part_Number := ""
+global showGUI := true
+global partNumber := ""
 global Revision := ""
-global Lot_Number := ""
+global lotNumber := ""
 global Description := ""
 global Quantity := ""
 global Supplier := ""
@@ -32,17 +33,8 @@ MyGui.Show(size)
 
 ;Hide gui and turn off edit keys ctrl + h
 ^h:: {
-    MyGui.Hide()
 
-    Hotkey("!c", "off")
-    Hotkey("!v", "off")
-    Hotkey("!1", "off")
-    Hotkey("!2", "off")
-    Hotkey("!3", "off")
-    Hotkey("!4", "off")
-    Hotkey("!5", "off")
-    Hotkey("!6", "off")
-    Hotkey("^e", "off")
+
 }
 
 ;Copy one item at a time, based off of selected item on drop down list alt + c
@@ -50,17 +42,17 @@ MyGui.Show(size)
     Switch ddl.Value
     {
         Case 1:
-            global Part_Number := get_Value()
+            global partNumber := getValue()
         Case 2:
-            global Revision := get_Value()
+            global Revision := getValue()
         Case 3:
-            global Lot_Number := get_Value()
+            global lotNumber := getValue()
         Case 4:
-            global Description := get_Value()
+            global Description := getValue()
         Case 5:
-            global Quantity := get_Value()
+            global Quantity := getValue()
         Case 6:
-            global Supplier := get_Value()
+            global Supplier := getValue()
     }
 }
 
@@ -69,74 +61,74 @@ MyGui.Show(size)
     Switch ddl.Value
     {
         Case 1:
-            global Part_Number
-            set_Value(Part_Number)
+            global partNumber
+            setValue(partNumber)
         Case 2:
             global Revision
-            set_Value(Revision)
+            setValue(Revision)
         Case 3:
-            global Lot_Number
-            set_Value(Lot_Number)
+            global lotNumber
+            setValue(lotNumber)
         Case 4:
             global Description
-            set_Value(Description)
+            setValue(Description)
         Case 5:
             global Quantity
-            set_Value(Quantity)
+            setValue(Quantity)
         Case 6:
             global Supplier
-            set_Value(Supplier)
+            setValue(Supplier)
     }
 }
 
 ; Copy values directly alt + 1-6
 !1:: {
-    global Part_Number := get_Value()
+    global partNumber := getValue()
 }
 !2:: {
-    global Revision := get_Value()
+    global Revision := getValue()
 }
 !3:: {
-    global Lot_Number := get_Value()
+    global lotNumber := getValue()
 }
 !4:: {
-    global Description := get_Value()
+    global Description := getValue()
 }
 !5:: {
-    global Quantity := get_Value()
+    global Quantity := getValue()
 }
 !6:: {
-    global Supplier := get_Value()
+    global Supplier := getValue()
 }
 
 ; Paste values directly ctrl + numpad1-numpad6
 ^Numpad1:: {
-    global Part_Number
-    set_Value(Part_Number)
+    global partNumber
+    setValue(partNumber)
 }
 ^Numpad2:: {
     global Revision
-    set_Value(Revision)
+    setValue(Revision)
 }
 ^Numpad3:: {
-    global Lot_Number
-    set_Value(Lot_Number)
+    global lotNumber
+    setValue(lotNumber)
 }
 ^Numpad4:: {
     global Description
-    set_Value(Description)
+    setValue(Description)
 }
 ^Numpad5:: {
     global Quantity
-    set_Value(Quantity)
+    setValue(Quantity)
 }
 ^Numpad6:: {
     global Supplier
-    set_Value(Supplier)
+    setValue(Supplier)
 }
 
 ;Function to reset clipboard, copy ctrl + c, then return clipboard contents
-get_Value() {
+getValue() {
     A_Clipboard := ""  ; Start off empty to allow ClipWait to detect when the text has arrived.
     Send "^c"
     ClipWait
@@ -144,7 +136,7 @@ get_Value() {
 }
 
 ;Function to set clipboard then envoke paste ctrl + v
-set_Value(str) {
+setValue(str) {
     A_Clipboard := str
     ClipWait
     Send "^v"
@@ -152,7 +144,7 @@ set_Value(str) {
 
 ;Make a concatenated string of all the values
 printData() {
-    data := labels[1] . Part_Number . "`n" . labels[2] . Revision . "`n" . labels[3] . Lot_Number . "`n" . labels[4] . Description . "`n" . labels[5] . Quantity . "`n" . labels[6] . Supplier . "`n"
+    data := labels[1] . partNumber . "`n" . labels[2] . Revision . "`n" . labels[3] . lotNumber . "`n" . labels[4] . Description . "`n" . labels[5] . Quantity . "`n" . labels[6] . Supplier . "`n"
     Send data
 }
 
