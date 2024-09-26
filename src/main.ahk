@@ -148,12 +148,53 @@ printData() {
     Send data
 }
 
+; Function to parse data dump and assign to variables
+parseData() {
+    A_Clipboard := "" ; Empty then copy data dump
+    Send "^c"
+    ClipWait
+    dump := A_Clipboard
+
+    global labels
+
+    ; Split the data dump into lines
+    lines := StrSplit(dump, "`n")
+
+    if lines.Length < 6
+    {
+        MsgBox "Wrong format"
+        return
+    }
+
+    ; Loop through the lines and assign the data based on the labels
+    Loop 6 {
+        ; Remove the label from the line to extract only the data
+        lineData := StrReplace(lines[A_Index], labels[A_Index])
+        ; Assign the data to the corresponding variable
+        Switch A_Index
+        {
+            Case 1:
+                global partNumber := lineData
+            Case 2:
+                global Revision := lineData
+            Case 3:
+                global lotNumber := lineData
+            Case 4:
+                global Description := lineData
+            Case 5:
+                global Quantity := lineData
+            Case 6:
+                global Supplier := lineData
+        }
+    }
+}
+
+^PrintScreen:: parseData()
+
 ;Print all the values when PrintScreen is pressed
-PrintScreen:: printData()
+!PrintScreen:: printData()
 
 ;TODO: Toggle showing values
-;TODO: Data Dump in case I need to make an email
-
 
 ;Exit app by pressing ctrl + End
 ^End:: ExitApp
