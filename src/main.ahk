@@ -154,9 +154,7 @@ setValue(str) {
 ;Make a concatenated string of all the values
 printData() {
     data := labels[1] . partNumber . "`n" . labels[2] . Revision . "`n" . labels[3] . lotNumber . "`n" . labels[4] . Description . "`n" . labels[5] . Quantity . "`n" . labels[6] . Supplier . "`n"
-    A_Clipboard := data
-    ClipWait
-    Send "^v"
+    setValue(data)
 }
 
 ; Function to parse data dump and assign to variables
