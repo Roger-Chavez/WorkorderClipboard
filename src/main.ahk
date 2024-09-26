@@ -1,8 +1,9 @@
 #Requires AutoHotkey v2.0
 
-global Part_Number := ""
+global showGUI := true
+global partNumber := ""
 global Revision := ""
-global Lot_Number := ""
+global lotNumber := ""
 global Description := ""
 global Quantity := ""
 global Supplier := ""
@@ -50,17 +51,17 @@ MyGui.Show(size)
     Switch ddl.Value
     {
         Case 1:
-            global Part_Number := get_Value()
+            global partNumber := getValue()
         Case 2:
-            global Revision := get_Value()
+            global Revision := getValue()
         Case 3:
-            global Lot_Number := get_Value()
+            global lotNumber := getValue()
         Case 4:
-            global Description := get_Value()
+            global Description := getValue()
         Case 5:
-            global Quantity := get_Value()
+            global Quantity := getValue()
         Case 6:
-            global Supplier := get_Value()
+            global Supplier := getValue()
     }
 }
 
@@ -69,74 +70,74 @@ MyGui.Show(size)
     Switch ddl.Value
     {
         Case 1:
-            global Part_Number
-            set_Value(Part_Number)
+            global partNumber
+            setValue(partNumber)
         Case 2:
             global Revision
-            set_Value(Revision)
+            setValue(Revision)
         Case 3:
-            global Lot_Number
-            set_Value(Lot_Number)
+            global lotNumber
+            setValue(lotNumber)
         Case 4:
             global Description
-            set_Value(Description)
+            setValue(Description)
         Case 5:
             global Quantity
-            set_Value(Quantity)
+            setValue(Quantity)
         Case 6:
             global Supplier
-            set_Value(Supplier)
+            setValue(Supplier)
     }
 }
 
 ; Copy values directly alt + 1-6
 !1:: {
-    global Part_Number := get_Value()
+    global partNumber := getValue()
 }
 !2:: {
-    global Revision := get_Value()
+    global Revision := getValue()
 }
 !3:: {
-    global Lot_Number := get_Value()
+    global lotNumber := getValue()
 }
 !4:: {
-    global Description := get_Value()
+    global Description := getValue()
 }
 !5:: {
-    global Quantity := get_Value()
+    global Quantity := getValue()
 }
 !6:: {
-    global Supplier := get_Value()
+    global Supplier := getValue()
 }
 
-; Paste values directly ctrl + numpad1-numpad6
-^Numpad1:: {
-    global Part_Number
-    set_Value(Part_Number)
+; Paste values directly ctrl + 1-6
+^1:: {
+    global partNumber
+    setValue(partNumber)
 }
-^Numpad2:: {
+^2:: {
     global Revision
-    set_Value(Revision)
+    setValue(Revision)
 }
-^Numpad3:: {
-    global Lot_Number
-    set_Value(Lot_Number)
+^3:: {
+    global lotNumber
+    setValue(lotNumber)
 }
-^Numpad4:: {
+^4:: {
     global Description
-    set_Value(Description)
+    setValue(Description)
 }
-^Numpad5:: {
+^5:: {
     global Quantity
-    set_Value(Quantity)
+    setValue(Quantity)
 }
-^Numpad6:: {
+^6:: {
     global Supplier
-    set_Value(Supplier)
+    setValue(Supplier)
 }
 
 ;Function to reset clipboard, copy ctrl + c, then return clipboard contents
-get_Value() {
+getValue() {
     A_Clipboard := ""  ; Start off empty to allow ClipWait to detect when the text has arrived.
     Send "^c"
     ClipWait
@@ -144,7 +145,7 @@ get_Value() {
 }
 
 ;Function to set clipboard then envoke paste ctrl + v
-set_Value(str) {
+setValue(str) {
     A_Clipboard := str
     ClipWait
     Send "^v"
@@ -152,16 +153,59 @@ set_Value(str) {
 
 ;Make a concatenated string of all the values
 printData() {
-    data := labels[1] . Part_Number . "`n" . labels[2] . Revision . "`n" . labels[3] . Lot_Number . "`n" . labels[4] . Description . "`n" . labels[5] . Quantity . "`n" . labels[6] . Supplier . "`n"
-    Send data
+    data := labels[1] . partNumber . "`n" . labels[2] . Revision . "`n" . labels[3] . lotNumber . "`n" . labels[4] . Description . "`n" . labels[5] . Quantity . "`n" . labels[6] . Supplier . "`n"
+    A_Clipboard := data
+    ClipWait
+    Send "^v"
 }
 
+; Function to parse data dump and assign to variables
+parseData() {
+    A_Clipboard := "" ; Empty then copy data dump
+    Send "^c"
+    ClipWait
+    dump := A_Clipboard
+
+    global labels
+
+    ; Split the data dump into lines
+    lines := StrSplit(dump, "`n")
+
+    if lines.Length < 6
+    {
+        MsgBox "Wrong format"
+        return
+    }
+
+    ; Loop through the lines and assign the data based on the labels
+    Loop 6 {
+        ; Remove the label from the line to extract only the data
+        lineData := StrReplace(lines[A_Index], labels[A_Index])
+        ; Assign the data to the corresponding variable
+        Switch A_Index
+        {
+            Case 1:
+                global partNumber := lineData
+            Case 2:
+                global Revision := lineData
+            Case 3:
+                global lotNumber := lineData
+            Case 4:
+                global Description := lineData
+            Case 5:
+                global Quantity := lineData
+            Case 6:
+                global Supplier := lineData
+        }
+    }
+}
+
+^PrintScreen:: parseData()
+
 ;Print all the values when PrintScreen is pressed
-PrintScreen:: printData()
+!PrintScreen:: printData()
 
 ;TODO: Toggle showing values
-;TODO: Data Dump in case I need to make an email
-
 
 ;Exit app by pressing ctrl + End
 ^End:: ExitApp
