@@ -101,28 +101,28 @@ MyGui.Show(size)
     global Supplier := getValue()
 }
 
-; Paste values directly ctrl + numpad1-numpad6
-^Numpad1:: {
+; Paste values directly ctrl + 1-6
+^1:: {
     global partNumber
     setValue(partNumber)
 }
-^Numpad2:: {
+^2:: {
     global Revision
     setValue(Revision)
 }
-^Numpad3:: {
+^3:: {
     global lotNumber
     setValue(lotNumber)
 }
-^Numpad4:: {
+^4:: {
     global Description
     setValue(Description)
 }
-^Numpad5:: {
+^5:: {
     global Quantity
     setValue(Quantity)
 }
-^Numpad6:: {
+^6:: {
     global Supplier
     setValue(Supplier)
 }
